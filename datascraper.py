@@ -6,15 +6,19 @@ from googlesearch import search
 import lxml
 
 def googletest():
-    query = "rob garfield"
+    query = "transparency"
     url = "https://google.com/search?q=" + query
     raw = get(url).text
-    soup = BeautifulSoup(raw, 'lxml')
+    soup = BeautifulSoup(raw, 'html.parser')
 
-    for chunk in soup.find_all('span', class_='st'):
-        #chunk = soup.find_all('span', class_='st')
-        print(chunk)
-        print()
+   # print(soup.prettify())
+
+    for chunk in soup.find_all('div', class_='g'):
+        try:
+            print(chunk.h3.text)
+            print()
+        except:
+            print("No text attribute")
 
     #for j in search(query, tld="com", num=10, stop=1, pause=2):
      #   print(j)
