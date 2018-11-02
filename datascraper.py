@@ -12,7 +12,7 @@ def googletest():
     soup = BeautifulSoup(raw, 'lxml')
 
     for chunk in soup.find_all('span', class_='st'):
-        #chunk = soup.find_all('span', class_='st')  
+        #chunk = soup.find_all('span', class_='st')
         print(chunk)
         print()
 
