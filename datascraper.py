@@ -2,8 +2,27 @@ from bs4 import BeautifulSoup
 import requests
 from requests import get
 import csv
+import urllib
+import urllib.parse
+from urllib.request import urlopen
 from googlesearch import search
 import lxml
+
+
+def requesttest(url):
+    try:
+        html = urlopen(url)
+    except:
+        print("URL not found")
+    try:
+        soup = BeautifulSoup(html.read(), 'lxml')
+        page = soup
+    except AttributeError as e:
+        return None
+    # return soup.prettify()
+    nameList = soup.find_all("span", {"class":"green"})
+    for name in nameList:
+        print(name.get_text())
 
 def googletest():
     query = "transparency"
@@ -12,16 +31,49 @@ def googletest():
     soup = BeautifulSoup(raw, 'html.parser')
 
    # print(soup.prettify())
+    test = soup.find('div', class_='g')
+    #newtest = BeautifulSoup(test.read(), 'html.parser')
+    print(test)
 
     for chunk in soup.find_all('div', class_='g'):
         try:
             print(chunk.h3.text)
+            soup.select_one("h3.r a".get('href'))
             print()
         except:
             print("No text attribute")
 
-    #for j in search(query, tld="com", num=10, stop=1, pause=2):
-     #   print(j)
+def makenodes(node):
+    return None
+
+def makeedges(urls)
+    return None
+
+def cleanURLs(urls):
+    newlist = []
+
+    for link in urls:
+        newurl = link.split('/')
+        newurl = ''.join(newurl[0] + "//" + newurl[2])
+        newlist.append(newurl)
+        # print(newurl)
+    newlist = list(set(newlist))
+
+    return newlist
+
+def bruteforce(query):
+    urls = []
+    for j in search(query, tld="com", num=50, stop=1, pause=2):
+       urls.append(j)
+
+    print("list initial contents:")
+    print(urls)
+    print(len(urls))
+    urls = list(set(urls))
+    cleaned = cleanURLs(urls)
+    print(len(cleaned))
+    for i in cleaned:
+        print(i)
 
 def scrapecorey():
     source = requests.get('http://cnn.com').text
@@ -73,5 +125,7 @@ def hello():
 if __name__ == '__main__':
     hello()
  #   scrapecorey()
-    googletest()
+ #    googletest()
     #pullLinks("http://cnn.com")
+    # print(requesttest("http://bit.ly/1Ge96Rw"))
+    bruteforce("wittgenstein")
