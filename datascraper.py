@@ -43,10 +43,11 @@ def googletest():
         except:
             print("No text attribute")
 
-def makenodes(node):
+def makenodes(node, links, csvfile):
+
     return None
 
-def makeedges(urls)
+def makeedges(urls, csvfile):
     return None
 
 def cleanURLs(urls):
@@ -58,7 +59,6 @@ def cleanURLs(urls):
         newlist.append(newurl)
         # print(newurl)
     newlist = list(set(newlist))
-
     return newlist
 
 def bruteforce(query):
@@ -67,13 +67,15 @@ def bruteforce(query):
        urls.append(j)
 
     print("list initial contents:")
-    print(urls)
-    print(len(urls))
+
     urls = list(set(urls))
     cleaned = cleanURLs(urls)
-    print(len(cleaned))
+
+    csv_edges = open('edges.csv', 'a', newline='')
+    csv_writer_edge = csv.writer(csv_edges)
+
     for i in cleaned:
-        print(i)
+        csv_writer_edge.writerow([query, i])
 
 def scrapecorey():
     source = requests.get('http://cnn.com').text
@@ -128,4 +130,22 @@ if __name__ == '__main__':
  #    googletest()
     #pullLinks("http://cnn.com")
     # print(requesttest("http://bit.ly/1Ge96Rw"))
-    bruteforce("wittgenstein")
+    csv_nodes = open('nodes.csv', 'w', newline='')
+    csv_writer_node = csv.writer(csv_nodes)
+    csv_writer_node.writerow(['ID'])
+    csv_nodes.close()
+    csv_nodes = open('nodes.csv', 'a', newline='')
+    csv_writer_node = csv.writer(csv_nodes)
+
+    csv_edges = open('edges.csv', 'w', newline='')
+    csv_writer_edge = csv.writer(csv_edges)
+    csv_writer_edge.writerow(['Source', 'Target'])
+    csv_edges.close()
+
+    query = None
+    while 1:
+        query = input("enter a keyword to search")
+        if query == 'q':
+            break
+        csv_writer_node.writerow([query])
+        bruteforce(query)
