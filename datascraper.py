@@ -63,10 +63,8 @@ def cleanURLs(urls):
 
 def bruteforce(query):
     urls = []
-    for j in search(query, tld="com", num=50, stop=1, pause=2):
+    for j in search(query, tld="com", num=50, stop=1, pause=4):
        urls.append(j)
-
-    print("list initial contents:")
 
     urls = list(set(urls))
     cleaned = cleanURLs(urls)
@@ -124,28 +122,53 @@ def pullLinks(url):
 def hello():
     print("Working on it...")
 
+def initializeCSV():
+    #node file
+    csv_nodes = open('nodes.csv', 'w', newline='')
+    csv_writer_node = csv.writer(csv_nodes)
+    csv_writer_node.writerow(['ID'])
+    csv_nodes.close()
+
+    #edge file
+    csv_edges = open('edges.csv', 'w', newline='')
+    csv_writer_edge = csv.writer(csv_edges)
+    csv_writer_edge.writerow(['Source', 'Target'])
+    csv_edges.close()
+
+def getSearchTerms(filename):
+    terms = []
+    with open(filename, 'r') as myfile:
+        terms = myfile.read()
+        terms = terms.split(',')
+        terms = [t.strip(' ') + ' poet' for t in terms]
+    return terms
+
 if __name__ == '__main__':
     hello()
  #   scrapecorey()
  #    googletest()
     #pullLinks("http://cnn.com")
     # print(requesttest("http://bit.ly/1Ge96Rw"))
-    csv_nodes = open('nodes.csv', 'w', newline='')
-    csv_writer_node = csv.writer(csv_nodes)
-    csv_writer_node.writerow(['ID'])
-    csv_nodes.close()
+    initializeCSV()
     csv_nodes = open('nodes.csv', 'a', newline='')
     csv_writer_node = csv.writer(csv_nodes)
 
-    csv_edges = open('edges.csv', 'w', newline='')
-    csv_writer_edge = csv.writer(csv_edges)
-    csv_writer_edge.writerow(['Source', 'Target'])
-    csv_edges.close()
-
     query = None
-    while 1:
-        query = input("enter a keyword to search")
-        if query == 'q':
-            break
-        csv_writer_node.writerow([query])
-        bruteforce(query)
+
+    try:
+        terms = getSearchTerms('flarf.txt')
+        print(terms)
+    except:
+        print("No such file!")
+
+    for t in terms:
+        csv_writer_node.writerow([t])
+        bruteforce(t)
+
+    #User Input Version
+    # while 1:
+    #     query = input("enter a keyword to search")
+    #     if query == 'q':
+    #         break
+    #     csv_writer_node.writerow([query])
+    #     bruteforce(query)
